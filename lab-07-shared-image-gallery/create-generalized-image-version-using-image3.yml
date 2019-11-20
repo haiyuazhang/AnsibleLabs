@@ -1,0 +1,33 @@
+- hosts: localhost
+  connection: local
+  vars_files:
+    - ./vars.yml
+  roles:
+    - ./modules
+
+  tasks:
+    - name: Create or update a simple gallery Image Version.
+      azure_rm_galleryimageversion:
+        resource_group: "{{ resource_group }}"
+        gallery_name: "{{ shared_gallery_name }}"
+        gallery_image_name: "{{ shared_image_name }}-generalized"
+        name: "{{ shared_image_version_1 }}"
+        location: "{{ location }}"
+        publishing_profile:
+          end_of_life_date: "2020-10-01t00:00:00+00:00"
+          exclude_from_latest: yes
+          replica_count: 2
+          storage_account_type: Standard_LRS
+          target_regions:
+            - name: West US
+              regional_replica_count: 1
+            - name: East US
+              regional_replica_count: 1
+              storage_account_type: Standard_ZRS
+          managed_image:
+            name: "testImage-3"
+            resource_group: "{{ resource_group }}"
+      register: output
+
+    - debug:
+        var: output

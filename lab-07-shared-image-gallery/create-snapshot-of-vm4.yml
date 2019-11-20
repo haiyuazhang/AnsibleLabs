@@ -1,0 +1,31 @@
+- hosts: localhost
+  connection: local
+  vars_files:
+    - ./vars.yml
+
+  tasks:
+    - name: Get VM information
+      azure_rm_virtualmachine_info:
+        resource_group: "{{ resource_group }}"
+        name: "{{ source_vm_name }}-4"
+      register: output
+    - debug:
+        var: output
+    
+    - name: create os disk snapshot
+      azure_rm_snapshot:
+        resource_group: haiyuazhang
+        name: myOsSnapshot-4
+        creation_data:
+          create_option: Copy
+          source_id:  /subscriptions/f64d4ee8-be94-457d-ba26-3fa6b6506cef/resourceGroups/haiyuazhang/providers/Microsoft.Compute/disks/sourceVm-4
+
+    - name: create data disksnapshot
+      azure_rm_snapshot:
+        resource_group: haiyuazhang
+        name: myDiskSnapshot-4
+        creation_data:
+          create_option: Copy
+          source_id:   "/subscriptions/f64d4ee8-be94-457d-ba26-3fa6b6506cef/resourceGroups/haiyuazhang/providers/Microsoft.Compute/disks/sourceVm-4_disk2_cb711790cd884f278106a129b6e0d9e4"
+
+  

@@ -1,0 +1,18 @@
+- hosts: localhost
+  connection: local
+  vars_files:
+    - ./vars.yml
+  roles:
+    - ./modules
+
+  tasks:
+  - name: Create VM using shared image
+    azure_rm_virtualmachine:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}-image-version-1"
+      vm_size: Standard_DS1_v2
+      admin_username: adminUser
+      admin_password: PassWord01
+      managed_disk_type: Standard_LRS
+      image:
+        "id": "/subscriptions/f64d4ee8-be94-457d-ba26-3fa6b6506cef/resourceGroups/haiyuazhang/providers/Microsoft.Compute/images/testImage-3"

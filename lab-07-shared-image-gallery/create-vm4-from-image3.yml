@@ -1,0 +1,27 @@
+- hosts: localhost
+  connection: local
+  vars_files:
+    - ./vars.yml
+  roles:
+    - ./modules
+
+  tasks:
+    - name: Create virtual network inteface cards 4
+      azure_rm_networkinterface:
+        resource_group: "{{ resource_group }}"
+        name: "{{ network_interface_name }}-4"
+        virtual_network: "{{ virtual_network_name }}"
+        subnet: "{{ subnet_name }}"
+
+        
+    - name: Create VM 4
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group }}"
+        name: "{{ source_vm_name }}-4"
+        admin_username: testuser
+        admin_password: "Password1234!"
+        vm_size: Standard_B1ms
+        network_interfaces: "{{ network_interface_name }}-4"
+        managed_disk_type: Standard_LRS
+        image:
+          id : "/subscriptions/f64d4ee8-be94-457d-ba26-3fa6b6506cef/resourceGroups/haiyuazhang/providers/Microsoft.Compute/images/testImage-3"
