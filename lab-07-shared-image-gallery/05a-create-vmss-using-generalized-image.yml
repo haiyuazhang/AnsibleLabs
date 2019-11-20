@@ -16,5 +16,7 @@
       upgrade_policy: Manual
       subnet_name: "{{ subnet_name }}"
       managed_disk_type: Standard_LRS
+      admin_username: "haiyuazhang"
+      admin_password: "!Letmein123"
       image:
-        id: "/subscriptions/{{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Compute/galleries/{{ shared_gallery_name }}/images/{{ shared_image_name }}/versions/{{ shared_image_version }}"
+        id: "/subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Compute/galleries/{{ shared_gallery_name }}/images/{{ shared_image_name }}/versions/{{ shared_image_version }}"
