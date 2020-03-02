@@ -1,0 +1,12 @@
+- hosts: localhost
+  vars_files:
+    - vars.yml
+  roles:
+    - ./modules 
+  connection: local
+  tasks:
+    - name: delete OpenShift Managed Cluster
+      openshiftmanagedcluster:
+        resource_group: demo 
+        name: myOpenShiftManagedCluster
+        state: absent

@@ -249,13 +249,13 @@ EXAMPLES = '''
       os_type: Linux
     agent_pool_profiles:
       - name: infra
-        count: '2'
+        count: '3'
         vm_size: Standard_D4s_v3
         subnet_cidr: 10.0.0.0/24
         os_type: Linux
         role: infra
       - name: compute
-        count: '4'
+        count: '5'
         vm_size: Standard_D4s_v3
         subnet_cidr: 10.0.0.0/24
         os_type: Linux
@@ -622,7 +622,8 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                 disposition='/properties/masterPoolProfile',
                 options=dict(
                     name=dict(
-                        type='str'
+                        type='str',
+                        comparison='ignore'
                     ),
                     count=dict(
                         type='int',
@@ -674,7 +675,8 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                         type='str',
                         disposition='osType',
                         choices=['Linux',
-                                 'Windows']
+                                 'Windows'],
+                        comparison='ignore'
                     )
                 )
             ),
@@ -736,7 +738,8 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                         type='str',
                         disposition='osType',
                         choices=['Linux',
-                                 'Windows']
+                                 'Windows'],
+                        updatable=False
                     ),
                     role=dict(
                         type='str',
@@ -757,7 +760,9 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                                 type='str'
                             ),
                             provider=dict(
-                                type='dict'
+                                type='dict',
+                                updatable=False,
+                                comparison='ignore'
                             )
                         )
                     )
@@ -781,9 +786,10 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
         self.to_do = Actions.NoAction
 
         self.body = {}
-        self.query_parameters = {}
+        self.query_parameters={}
+        self.header_parameters={}
+
         self.query_parameters['api-version'] = '2019-04-30'
-        self.header_parameters = {}
         self.header_parameters['Content-Type'] = 'application/json; charset=utf-8'
 
         super(AzureRMOpenShiftManagedClusters, self).__init__(derived_arg_spec=self.module_arg_spec,
@@ -925,7 +931,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                                               30)
         except CloudError as e:
             self.log('Error attempting to delete the OpenShiftManagedCluster instance.')
-            self.fail('Error deleting the OpenShiftManagedCluster instance: {0}'.format(str(e)))
+            # self.fail('Error deleting the OpenShiftManagedCluster instance: {0}'.format(str(e)))
 
         return True
 
@@ -941,6 +947,8 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                                               self.status_code,
                                               600,
                                               30)
+            found = True
+            response = json.loads(response.text)
             found = True
             self.log("Response : {0}".format(response))
             # self.log("OpenShiftManagedCluster instance : {0} found".format(response.name))

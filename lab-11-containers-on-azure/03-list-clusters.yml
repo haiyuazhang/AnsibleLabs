@@ -1,0 +1,10 @@
+- hosts: localhost
+  vars_files:
+    - vars.yml
+  roles:
+    - ./modules 
+  connection: local
+  tasks:
+    - name: Create/Update OpenShift Managed Cluster
+      openshiftmanagedcluster_info:
+        resource_group: "{{ resource_group }}"

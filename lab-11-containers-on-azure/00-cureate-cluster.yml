@@ -1,12 +1,12 @@
----
 - hosts: localhost
   vars_files:
     - vars.yml
   roles:
     - ./modules 
+  connection: local
   tasks:
     - name: Create/Update OpenShift Managed Cluster
-      azure.rm.openshiftmanagedcluster:
+      openshiftmanagedcluster:
         resource_group: "{{ resource_group }}"
         name: myOpenShiftManagedCluster
         location: eastus
@@ -18,19 +18,19 @@
         master_pool_profile:
           name: master
           count: 3
-          vm_size: Standard_D4s_v3
+          vm_size: Standard_D4s_v3 
           subnet_cidr: 10.0.0.0/24
           os_type: Linux
         agent_pool_profiles:
           - name: infra
-            count: 2
-            vm_size: Standard_D4s_v3
+            count: 3
+            vm_size: Standard_D4s_v3 
             subnet_cidr: 10.0.0.0/24
             os_type: Linux
             role: infra
           - name: compute
-            count: 4
-            vm_size: Standard_D4s_v3
+            count: 3
+            vm_size: Standard_D4s_v3 
             subnet_cidr: 10.0.0.0/24
             os_type: Linux
             role: compute
